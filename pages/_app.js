@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import App from 'next/app';
-import Head from 'next/head';
 import Link from 'next/link';
+import Router from 'next/router';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 class Kiji extends App {
   render() {
@@ -15,6 +16,8 @@ class Kiji extends App {
     return (
       <>
         <CssBaseline />
+
+        <ProgressBar />
 
         <AppBar position='static'>
           <Toolbar>
@@ -31,5 +34,22 @@ class Kiji extends App {
     );
   }
 }
+
+const ProgressBar = () => {
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    Router.events.on('routeChangeStart', () => setLoading(true));
+    Router.events.on('routeChangeComplete', () => setLoading(false));
+    Router.events.on('routeChangeError', () => setLoading(false));
+  }, []);
+
+  return isLoading ? (
+    <LinearProgress
+      color='secondary'
+      style={{ position: 'fixed', zIndex: '2', top: '0', width: '100%' }}
+    />
+  ) : null;
+};
 
 export default Kiji;
