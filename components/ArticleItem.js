@@ -8,7 +8,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   card: {
-    minWidth: 370
+    minWidth: 250,
+    maxWidth: 350
   },
   pos: {
     marginBottom: 15

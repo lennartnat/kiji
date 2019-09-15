@@ -37,6 +37,8 @@ const Home = ({ articles }) => {
           Articles
         </Typography>
 
+        <hr />
+
         <Link href={'/article/Create'}>
           <Fab color='primary' aria-label='add' className={classes.fab}>
             +
