@@ -1,6 +1,6 @@
 import Head from 'components/Head';
 import fetch from 'isomorphic-unfetch';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import MarkDown from 'react-markdown';
 import Router from 'next/router';
 
@@ -30,14 +30,7 @@ const Create = () => {
   const classes = useStyles();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-
-  const handleTitleChange = e => {
-    setTitle(e.target.value);
-  };
-
-  const handleContentChange = e => {
-    setContent(e.target.value);
-  };
+  const [isDisabled, setDisabled] = useState(true);
 
   const handleSubmit = async () => {
     await fetch(`https://kiji-api.herokuapp.com/articles`, {
@@ -54,9 +47,25 @@ const Create = () => {
       });
   };
 
+  const handleInput = ({ target: { name, value } }) => {
+    if (name === 'title') {
+      setTitle(value);
+    } else if (name === 'content') {
+      setContent(value);
+    }
+  };
+
   const handleCancel = () => {
     Router.push(`/`);
   };
+
+  useEffect(() => {
+    if (title && content) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [title, content]);
 
   return (
     <>
@@ -70,25 +79,27 @@ const Create = () => {
         <hr />
 
         <TextField
-          label='Title'
+          label={'Title'}
+          name={'title'}
           fullWidth
           value={title}
-          onChange={handleTitleChange}
-          margin='normal'
-          variant='outlined'
+          onChange={handleInput}
+          margin={'normal'}
+          variant={'outlined'}
         />
 
         <br />
 
         <TextField
-          label='Content'
+          label={'Content'}
+          name={'content'}
           fullWidth
           multiline
           rows={'18'}
           value={content}
-          onChange={handleContentChange}
-          margin='normal'
-          variant='outlined'
+          onChange={handleInput}
+          margin={'normal'}
+          variant={'outlined'}
         />
 
         <hr />
@@ -114,6 +125,7 @@ const Create = () => {
             color={'primary'}
             onClick={handleSubmit}
             className={classes.actionButton}
+            disabled={isDisabled}
           >
             Go
           </Button>
